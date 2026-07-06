@@ -605,8 +605,8 @@ export const TEMPLATE_SLOTS = {
  * All templates share the same placeholder artwork, so one detector works for all.
  */
 export function isPlaceholderPixel(r, g, b, fileName) {
-  // Sky blue gradient
-  const isSkyBlue = (
+  // Base rules
+  let isSkyBlue = (
     r >= 95 && r <= 242 &&
     g >= 175 && g <= 252 &&
     b >= 200 && b <= 255 &&
@@ -614,25 +614,31 @@ export function isPlaceholderPixel(r, g, b, fileName) {
     b > g - 15
   );
 
-  // White / grey clouds (matches cloud pixels in polaroid and film templates without picking up cream backgrounds)
-  const isCloud = (
+  let isCloud = (
     r >= 200 && r <= 255 &&
     g >= 200 && g <= 255 &&
     b >= 200 && b <= 255 &&
-    b >= r - 4 &&
-    b >= g - 4 &&
     Math.abs(r - g) <= 15 &&
     Math.abs(g - b) <= 15
   );
 
-  // Green hills (wider limits, including saturated dark green and light yellowish transitions)
-  const isGreenHills = (
+  let isGreenHills = (
     g >= 110 && g <= 255 &&
     r >= 50 && r <= 240 &&
     b >= 0 && b <= 235 &&
     g > r - 5 &&          // green is close to or dominant over red
     g > b + 10            // green is clearly dominant over blue (crucial to reject black/cream)
   );
+
+  if (fileName === 'book.png') {
+    // Relaxed rules for book.png to catch anti-aliased edges and eliminate white spots
+    isSkyBlue = (r >= 80 && r <= 255 && g >= 160 && g <= 255 && b >= 190 && b <= 255 && b >= r - 10 && b >= g - 20);
+    isCloud = (r >= 190 && g >= 190 && b >= 190 && Math.abs(r - g) <= 25 && Math.abs(g - b) <= 25);
+    isGreenHills = (g >= 100 && g <= 255 && r >= 30 && r <= 255 && b >= 0 && b <= 245 && g >= r - 15 && g >= b + 5);
+  } else {
+    // Strict rules for other templates to avoid eating cream backgrounds
+    isCloud = isCloud && b >= r - 4 && b >= g - 4;
+  }
 
   return isSkyBlue || isCloud || isGreenHills;
 }
