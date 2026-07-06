@@ -55,7 +55,7 @@ export default function LandingPage({ onStart }) {
       {/* Header */}
       <header className="landing-header">
         <div className="logo-container">
-          <img src="/Logo.png" alt="Photobooth Logo" className="landing-logo" />
+          <img src={`${import.meta.env.BASE_URL}Logo.png`} alt="Photobooth Logo" className="landing-logo" />
           <span className="logo-text">Photobooth Online</span>
         </div>
       </header>

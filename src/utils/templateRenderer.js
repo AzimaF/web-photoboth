@@ -12,7 +12,7 @@ export const TEMPLATES = [
     icon: '📸',
     bgColor: '#F5F0E8',
     layout: 'custom',
-    image: "/tumpul's-photoboth/clasic.png"
+    image: `${import.meta.env.BASE_URL}tumpul's-photoboth/clasic.png`
   },
   {
     id: 'tumpul-film',
@@ -21,7 +21,7 @@ export const TEMPLATES = [
     icon: '🎞️',
     bgColor: '#F5F0E8',
     layout: 'custom',
-    image: "/tumpul's-photoboth/film.png"
+    image: `${import.meta.env.BASE_URL}tumpul's-photoboth/film.png`
   },
   {
     id: 'tumpul-minimalist',
@@ -30,7 +30,7 @@ export const TEMPLATES = [
     icon: '⬜',
     bgColor: '#8B0000',
     layout: 'custom',
-    image: "/tumpul's-photoboth/minimalist.png"
+    image: `${import.meta.env.BASE_URL}tumpul's-photoboth/minimalist.png`
   },
   {
     id: 'tumpul-neon',
@@ -39,7 +39,7 @@ export const TEMPLATES = [
     icon: '✨',
     bgColor: '#0D1B3E',
     layout: 'custom',
-    image: "/tumpul's-photoboth/neon.png"
+    image: `${import.meta.env.BASE_URL}tumpul's-photoboth/neon.png`
   },
   {
     id: 'tumpul-polaroid',
@@ -48,7 +48,7 @@ export const TEMPLATES = [
     icon: '🖼️',
     bgColor: '#C1603A',
     layout: 'custom',
-    image: "/tumpul's-photoboth/polaroid.png"
+    image: `${import.meta.env.BASE_URL}tumpul's-photoboth/polaroid.png`
   },
   {
     id: 'tumpul-retro',
@@ -57,7 +57,7 @@ export const TEMPLATES = [
     icon: '📼',
     bgColor: '#F2A06E',
     layout: 'custom',
-    image: "/tumpul's-photoboth/retro.png"
+    image: `${import.meta.env.BASE_URL}tumpul's-photoboth/retro.png`
   },
   {
     id: 'tumpul-book',
@@ -67,7 +67,7 @@ export const TEMPLATES = [
     bgColor: '#FFFFFF',
     layout: 'custom',
     photoCount: 3,
-    image: "/tumpul's-photoboth/book.png"
+    image: `${import.meta.env.BASE_URL}tumpul's-photoboth/book.png`
   },
 ];
 
