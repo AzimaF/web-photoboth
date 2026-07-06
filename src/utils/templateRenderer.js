@@ -604,41 +604,32 @@ export const TEMPLATE_SLOTS = {
  * Check if a pixel belongs to the placeholder image (sky blue, clouds, or green hills).
  * All templates share the same placeholder artwork, so one detector works for all.
  */
-export function isPlaceholderPixel(r, g, b, fileName) {
-  // Base rules
-  let isSkyBlue = (
-    r >= 95 && r <= 242 &&
-    g >= 175 && g <= 252 &&
-    b >= 200 && b <= 255 &&
-    b > r + 5 &&
-    b > g - 15
+export function isPlaceholderPixel(r, g, b) {
+  // Relaxed rules to catch all anti-aliased edges and eliminate white noise spots
+  // Sky blue gradient
+  const isSkyBlue = (
+    r >= 80 && r <= 255 &&
+    g >= 160 && g <= 255 &&
+    b >= 190 && b <= 255 &&
+    b >= r - 10 &&
+    b >= g - 20
   );
 
-  let isCloud = (
-    r >= 200 && r <= 255 &&
-    g >= 200 && g <= 255 &&
-    b >= 200 && b <= 255 &&
-    Math.abs(r - g) <= 15 &&
-    Math.abs(g - b) <= 15
+  // White / grey clouds
+  const isCloud = (
+    r >= 190 && g >= 190 && b >= 190 &&
+    Math.abs(r - g) <= 25 &&
+    Math.abs(g - b) <= 25
   );
 
-  let isGreenHills = (
-    g >= 110 && g <= 255 &&
-    r >= 50 && r <= 240 &&
-    b >= 0 && b <= 235 &&
-    g > r - 5 &&          // green is close to or dominant over red
-    g > b + 10            // green is clearly dominant over blue (crucial to reject black/cream)
+  // Green hills
+  const isGreenHills = (
+    g >= 100 && g <= 255 &&
+    r >= 30 && r <= 255 &&
+    b >= 0 && b <= 245 &&
+    g >= r - 15 &&
+    g >= b + 5
   );
-
-  if (fileName === 'book.png') {
-    // Relaxed rules for book.png to catch anti-aliased edges and eliminate white spots
-    isSkyBlue = (r >= 80 && r <= 255 && g >= 160 && g <= 255 && b >= 190 && b <= 255 && b >= r - 10 && b >= g - 20);
-    isCloud = (r >= 190 && g >= 190 && b >= 190 && Math.abs(r - g) <= 25 && Math.abs(g - b) <= 25);
-    isGreenHills = (g >= 100 && g <= 255 && r >= 30 && r <= 255 && b >= 0 && b <= 245 && g >= r - 15 && g >= b + 5);
-  } else {
-    // Strict rules for other templates to avoid eating cream backgrounds
-    isCloud = isCloud && b >= r - 4 && b >= g - 4;
-  }
 
   return isSkyBlue || isCloud || isGreenHills;
 }
@@ -725,7 +716,7 @@ async function renderCustomTemplate(canvas, photos, template) {
 
     for (let i = 0; i < orig.length; i += 4) {
       const r = orig[i], g = orig[i+1], b = orig[i+2], a = orig[i+3];
-      if (a > 0 && !isPlaceholderPixel(r, g, b, fileName)) {
+      if (a > 0 && !isPlaceholderPixel(r, g, b)) {
         dst[i]   = r;
         dst[i+1] = g;
         dst[i+2] = b;
