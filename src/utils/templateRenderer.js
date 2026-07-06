@@ -593,9 +593,9 @@ export const TEMPLATE_SLOTS = {
     { x: 736, y: 4247, w: 858, h: 1295 },
   ],
   'book.png': [
-    { x: 466, y: 1073, w: 1371, h: 442 },
-    { x: 466, y: 2554, w: 1371, h: 442 },
-    { x: 466, y: 4035, w: 1371, h: 441 },
+    { x: 466, y: 143,  w: 1371, h: 930 },
+    { x: 466, y: 1623, w: 1371, h: 931 },
+    { x: 466, y: 3104, w: 1371, h: 931 },
   ],
 };
 
@@ -634,6 +634,9 @@ export function isPlaceholderPixel(r, g, b, fileName) {
     g > b + 10            // green is clearly dominant over blue (crucial to reject black/cream)
   );
 
+  if (fileName === 'book.png') {
+    return isSkyBlue || isCloud;
+  }
   return isSkyBlue || isCloud || isGreenHills;
 }
 
