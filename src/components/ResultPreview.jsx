@@ -105,7 +105,7 @@ export default function ResultPreview({ photos, videoBlobs = [], templateId, onC
 
         for (let i = 0; i < orig.length; i += 4) {
           const r = orig[i], g = orig[i+1], b = orig[i+2], a = orig[i+3];
-          if (a > 0 && !isPlaceholderPixel(r, g, b)) {
+          if (a > 0 && !isPlaceholderPixel(r, g, b, fileName)) {
             dst[i]   = r;
             dst[i+1] = g;
             dst[i+2] = b;

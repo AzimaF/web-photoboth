@@ -593,9 +593,9 @@ export const TEMPLATE_SLOTS = {
     { x: 736, y: 4247, w: 858, h: 1295 },
   ],
   'book.png': [
-    { x: 466, y: 143,  w: 1371, h: 528 },
-    { x: 466, y: 1623, w: 1371, h: 529 },
-    { x: 466, y: 3104, w: 1372, h: 528 },
+    { x: 466, y: 143,  w: 1371, h: 1372 },
+    { x: 466, y: 1623, w: 1371, h: 1373 },
+    { x: 466, y: 3104, w: 1372, h: 1372 },
   ],
 };
 
@@ -604,7 +604,7 @@ export const TEMPLATE_SLOTS = {
  * Check if a pixel belongs to the placeholder image (sky blue, clouds, or green hills).
  * All templates share the same placeholder artwork, so one detector works for all.
  */
-export function isPlaceholderPixel(r, g, b) {
+export function isPlaceholderPixel(r, g, b, fileName) {
   // Sky blue gradient
   const isSkyBlue = (
     r >= 95 && r <= 242 &&
@@ -634,6 +634,9 @@ export function isPlaceholderPixel(r, g, b) {
     g > b + 10            // green is clearly dominant over blue (crucial to reject black/cream)
   );
 
+  if (fileName === 'book.png') {
+    return isSkyBlue || isCloud;
+  }
   return isSkyBlue || isCloud || isGreenHills;
 }
 
@@ -719,7 +722,7 @@ async function renderCustomTemplate(canvas, photos, template) {
 
     for (let i = 0; i < orig.length; i += 4) {
       const r = orig[i], g = orig[i+1], b = orig[i+2], a = orig[i+3];
-      if (a > 0 && !isPlaceholderPixel(r, g, b)) {
+      if (a > 0 && !isPlaceholderPixel(r, g, b, fileName)) {
         dst[i]   = r;
         dst[i+1] = g;
         dst[i+2] = b;
