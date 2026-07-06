@@ -289,14 +289,7 @@ export default function ResultPreview({ photos, videoBlobs = [], templateId, onC
       const blob = await canvasToBlob(canvasRef.current);
       const file = new File([blob], 'photobooth.png', { type: 'image/png' });
 
-      if (navigator.share && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          title: 'Photobooth Online',
-          text: 'Lihat foto photobooth saya!',
-          files: [file],
-        });
-      } else {
-        // Fallback: copy to clipboard
+      const fallbackShare = async () => {
         try {
           await navigator.clipboard.write([
             new ClipboardItem({ 'image/png': blob }),
@@ -305,12 +298,28 @@ export default function ResultPreview({ photos, videoBlobs = [], templateId, onC
           setTimeout(() => setShowToast(false), 3000);
         } catch {
           handleDownload();
+          alert('Foto telah didownload. Silakan bagikan secara manual ke media sosial Anda.');
         }
+      };
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            title: 'Photobooth Online',
+            text: 'Lihat foto photobooth saya!',
+            files: [file],
+          });
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.error('Native share failed:', err);
+            await fallbackShare();
+          }
+        }
+      } else {
+        await fallbackShare();
       }
     } catch (err) {
-      if (err.name !== 'AbortError') {
-        console.error('Share error:', err);
-      }
+      console.error('Share error:', err);
     }
   }
 
